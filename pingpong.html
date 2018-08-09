@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body onkeypress="press(event)" style="background-color: black">
+ 
+ <h1 id="text" style="position: absolute; color: green; left: 270px; font-size: 250%"></h1>
+  <input id="block1" style="position: absolute; top: 160px; left: 10px; width: 10px; height: 80px">
+  <input id="block2" style="position: absolute; top: 160px; left: 600px; width: 10px; height: 80px">
+   <hr style="position: absolute; top: 400px; border-color: white; width: 600px">
+    <button id="button" onclick="start()">Start</button>
+<span id="ball" style="position: absolute; top: 200px; left: 30px; width: 15px; height: 15px; background-color: red; border-radius: 50%"/>
+
+<script>
+
+var key = 0;
+var pointsLeft = 0;
+var pointsRigth = 0;
+
+//create x and y direction of ball
+var randomx = Math.ceil(Math.random()*6) * 2; 
+    //-1 or 1
+    var negPos = Math.floor(Math.random()*2); 
+        if (negPos == 0) {
+            negPos = -1;
+        }
+        var randomy = negPos * (12 - randomx); //ball moving up or down 
+
+//block movement
+function press(event) {
+    key = event.keyCode;
+    
+    if (key == 115) {
+        block1.style.top = parseInt(block1.style.top) + 40 + "px";
+    }
+
+    if (key == 119) {
+        block1.style.top = parseInt(block1.style.top) - 40 + "px";
+    }
+
+    if (key == 108) {
+        block2.style.top = parseInt(block2.style.top) + 40 + "px";
+    }
+
+    if (key == 111) {
+        block2.style.top = parseInt(block2.style.top) - 40 + "px";
+    }
+ }
+
+//starts when button is clicked
+function start() {
+    button.style.visibility = "hidden";
+    setInterval(move, 20);
+     }
+
+//wall bounce
+     function move() {
+
+        if (parseInt(ball.style.top) > 390 || parseInt(ball.style.top) < 5) {  //change direction of ball when hit a wall
+            randomy = -1 * randomy;                                
+        } 
+
+//block bounce
+//check if ball hits block and change direction
+if (parseInt(ball.style.top) <= parseInt(block1.style.top) + 80 && parseInt(ball.style.top) >= parseInt(block1.style.top) - 7 &&
+    parseInt(ball.style.left) < 20 && parseInt(ball.style.left) > 0){
+    randomx = Math.ceil(Math.random()*6) * 2;
+    negPos = Math.floor(Math.random()*2);
+        if (negPos == 0) {
+            negPos = -1;
+        }
+        randomy = negPos * (12 - randomx);
+    }
+
+if (parseInt(ball.style.top) <= parseInt(block2.style.top) + 80 && parseInt(ball.style.top) >= (parseInt(block2.style.top) - 7) &&
+    parseInt(ball.style.left) > 590 && parseInt(ball.style.left) < 610){
+    randomx = -1 * (Math.ceil(Math.random()*6) * 2);
+    negPos = Math.floor(Math.random()*2);
+        if (negPos == 0) {
+            negPos = -1;
+        }
+        randomy = negPos * (12 - Math.abs(randomx));
+    }
+
+//ball direction
+ball.style.left = parseInt(ball.style.left) + randomx + "px";
+ball.style.top = parseInt(ball.style.top) + randomy + "px";
+
+//points
+//when ball goes past block, player scores
+//move ball back to scoring player 
+if (parseInt(ball.style.left) < 0) {
+    pointsRigth += 1;
+    text.innerHTML = pointsLeft + " - " + pointsRigth;
+    ball.style.left = "580px";
+    ball.style.top = "200px";
+}
+if (parseInt(ball.style.left) > 610) {
+    pointsLeft += 1;
+    text.innerHTML = pointsLeft + " - " + pointsRigth;
+    ball.style.left = "30px";
+    ball.style.top = "200px";
+}
+
+}
+
+</script>
+</body>
+
+</html>
